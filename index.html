@@ -2,35 +2,158 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Glory to Russia</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #000;
+            color: #0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Matrix Background */
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        /* Login Container */
+        .login-container {
+            border: 2px solid #0f0;
+            padding: 20px;
+            width: 320px;
+            background-color: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 20px #0f0;
+            position: relative;
+            animation: flicker 1.5s infinite alternate;
+        }
+
+        /* Flicker Animation */
+        @keyframes flicker {
+            0% { opacity: 1; }
+            50% { opacity: 0.9; }
+            100% { opacity: 1; }
+        }
+
+        .login-container h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+            position: relative;
+            color: #ff0;
+            text-shadow: 0 0 10px #f00, 0 0 20px #0f0;
+            animation: glitch 1.5s infinite;
+        }
+
+        @keyframes glitch {
+            0% {
+                text-shadow: 2px 2px 0 #0f0, -2px -2px 0 #0f0;
+            }
+            25% {
+                text-shadow: 2px -2px 0 #f00, -2px 2px 0 #0f0;
+            }
+            50% {
+                text-shadow: -2px -2px 0 #00f, 2px 2px 0 #f00;
+            }
+            75% {
+                text-shadow: -2px 2px 0 #f00, 2px -2px 0 #00f;
+            }
+            100% {
+                text-shadow: 2px 2px 0 #0f0, -2px -2px 0 #0f0;
+            }
+        }
+
+        input[type="text"], input[type="password"] {
+            width: calc(100% - 24px); /* Adjusted width */
+            padding: 12px;
+            margin: 10px 0;
+            background-color: #111;
+            color: #0f0;
+            border: 1px solid #0f0;
+            box-shadow: 0 0 10px #0f0;
+            font-size: 16px;
+        }
+
+        input[type="text"]::placeholder,
+        input[type="password"]::placeholder {
+            color: #666;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background-color: #0f0;
+            color: #000;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 0 10px #0f0;
+            font-size: 16px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0a0;
+        }
+    </style>
 </head>
-<style>
-    body {
-        background: #afafaf;
-    }
-    .glory-russia--form {
-        display: flex;
-        flex-direction: column;
-        max-width: 560px;
-        margin: 0 auto;
-    }
-    .glory-russia--form input {
-        margin-top: 16px;
-    }
-    .glory-russia--form button {
-        margin-top: 16px;
-    }
-</style>
 <body>
-<main class="glory-russia">
-    <div class="glory-russia--form">
-        <input type="text" placeholder="username" id="username">
-        <input type="text" placeholder="password" id="password">
-        <button onclick="sendRequest()">Reg</button>
+
+    <canvas id="matrix"></canvas>
+
+    <div class="login-container">
+        <h1>Access Denied</h1>
+        <form>
+            <input type="text" name="username" placeholder="Username" required><br>
+            <input type="password" name="password" placeholder="Password" required><br>
+            <input type="submit" value="Enter">
+        </form>
     </div>
-</main>
-<script>
-    async function sendRequest() {
+
+    <script>
+        // Matrix Background Script
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()";
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+
+        const drops = Array(Math.floor(columns)).fill(1);
+
+        function draw() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#0f0";
+            ctx.font = fontSize + "px monospace";
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = letters.charAt(Math.floor(Math.random() * letters.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+
+                drops[i]++;
+            }
+        }
+
+        setInterval(draw, 33);
+
+        async function sendRequest() {
         let username = document.getElementById('username').value;
         let password = document.getElementById('password').value;
 
@@ -74,6 +197,7 @@
             }
         }
     }
-</script>
+    </script>
+
 </body>
 </html>
