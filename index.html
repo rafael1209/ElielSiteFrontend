@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>glory to Russia</title>
+</head>
+<style>
+    body {
+        background: #afafaf;
+    }
+    .glory-russia--form {
+        display: flex;
+        flex-direction: column;
+        max-width: 560px;
+        margin: 0 auto;
+    }
+    .glory-russia--form input {
+        margin-top: 16px;
+    }
+    .glory-russia--form button {
+        margin-top: 16px;
+    }
+</style>
+<body>
+    <main class="glory-russia">
+        <div class="glory-russia--form">
+            <input type="text" placeholder="username" id="username">
+            <input type="text" placeholder="password" id="password">
+            <button onclick="sendRequest()">Reg</button>
+        </div>
+    </main>
+<script>
+    async function sendRequest() {
+        let username = document.getElementById('username').value
+        let password = document.getElementById('password').value
+
+        if (username !== '' && password !== '') {
+            const response = await fetch('https://kal.rafaelchasman.ru/api/auth', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ login: username, password: password })
+            })
+            const data = await response.text()
+
+            if (response) {
+                const divWithImg = document.createElement('div')
+                const imgElement = document.createElement('img')
+
+                imgElement.src = data.trim()
+                divWithImg.appendChild(imgElement)
+
+                document.body.appendChild(divWithImg)
+            }
+        }
+    }
+</script>
+</body>
+</html>
